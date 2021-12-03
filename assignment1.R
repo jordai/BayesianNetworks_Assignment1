@@ -272,3 +272,48 @@ plot(dtest$area, main = 'Overview of the predicted area (Red) and \nthe actual a
 points(ptest,  col = "red")
 dev.off()
 
+# Create Path Coefficients
+g <- dagitty(
+  'dag{
+  bb="0,0,1,1"
+  area [outcome,pos="0.5,0.8"]
+  ISI [pos="0.2,0.6"]
+  FFMC [pos="0.4,0.6"]
+  DMC [pos="0.5,0.6"]
+  DC [pos="0.8,0.6"]
+  month [pos="0.7,0.25"]
+  RH [pos="0.4,0.4"]
+  rain [pos="0.8,0.4"]
+  temp [pos="0.6,0.4"]
+  wind [pos="0.2,0.4"]
+  DC -> area
+  DMC -> area
+  FFMC -> area
+  FFMC -> ISI
+  ISI -> area
+  month -> rain
+  month -> temp
+  month -> DC
+  RH -> DMC
+  RH -> FFMC
+  rain -> DC
+  rain -> DMC
+  rain -> FFMC
+  temp -> DC
+  temp -> DMC
+  temp -> FFMC
+  temp -> RH
+  wind -> FFMC
+  wind -> ISI
+  DC -> DMC
+}')
+png(file="~/Documents/Artificial Intelligence/Master/2122 Sem. 1/Bayesian Networks/Assignment1/Assignment_1/imgs/pathcoef.png",
+    width=600, height=350)
+cg <- coordinates(g)
+fit <- sem( toString(g,"lavaan"), sample.cov=M, sample.nobs=nrow(d) )
+fg <- lavaanToGraph(fit, digits=2)
+coordinates(fg) <- cg
+plot(fg, show.coefficients=TRUE)
+dev.off()
+summary(fit)
+
