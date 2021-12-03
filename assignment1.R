@@ -1,5 +1,4 @@
 # Set Working Directory (where data and R script are located)
-setwd("~/Documents/Artificial Intelligence/Master/2122 Sem. 1/Bayesian Networks/Assignment1/Assignment_1 kopie")
 
 set.seed(007)
 
@@ -50,7 +49,7 @@ g <- dagitty('dag{
   wind -> FFMC
   wind -> ISI
   }')
-png(file="~/Documents/Artificial Intelligence/Master/2122 Sem. 1/Bayesian Networks/Assignment1/Assignment_1/imgs/graph0.png",
+png(file="graph0.png",
     width=600, height=350)
 plot(g)
 dev.off()
@@ -97,7 +96,7 @@ g <- dagitty('dag{
   wind -> FFMC
   wind -> ISI
 }')
-png(file="~/Documents/Artificial Intelligence/Master/2122 Sem. 1/Bayesian Networks/Assignment1/Assignment_1/imgs/graph1.png",
+png(file="graph1.png",
     width=600, height=350)
 plot(g)
 dev.off()
@@ -149,7 +148,7 @@ g <- dagitty(
   wind -> FFMC
   wind -> ISI
 }')
-png(file="~/Documents/Artificial Intelligence/Master/2122 Sem. 1/Bayesian Networks/Assignment1/Assignment_1/imgs/graph2.png",
+png(file="graph2.png",
     width=600, height=350)
 plot(g)
 dev.off()
@@ -161,7 +160,7 @@ impliedConditionalIndependencies( g )
 localTests(g, sample.cov = M, sample.nobs=nrow(d))
 
 # Now we see that:            Estimate      p.value
-# DC _||_ DMC | rain, temp    0.590249007   2.001589e-52
+# DC _||_ DMC | rain, temp    0.591113602   2.014520e-52
 # We are not certain about how DC and DMC are correlated
 # So let's make a connection DC <-> DMC:
 
@@ -199,7 +198,7 @@ g <- dagitty(
   wind -> ISI
   DC -> DMC
 }')
-png(file="~/Documents/Artificial Intelligence/Master/2122 Sem. 1/Bayesian Networks/Assignment1/Assignment_1/imgs/graph3.png",
+png(file="graph3.png",
     width=600, height=350)
 plot(g)
 dev.off()
@@ -252,48 +251,24 @@ test_MAE <- mean(test_abs_errors)
 # Root Mean Squared Error on test set
 test_RMSE <- sqrt(mean(test_errors^2))
 
-# Create Path Coefficients
-g <- dagitty(
-  'dag{
-  bb="0,0,1,1"
-  area [outcome,pos="0.5,0.8"]
-  ISI [pos="0.2,0.6"]
-  FFMC [pos="0.4,0.6"]
-  DMC [pos="0.5,0.6"]
-  DC [pos="0.8,0.6"]
-  month [pos="0.7,0.25"]
-  RH [pos="0.4,0.4"]
-  rain [pos="0.8,0.4"]
-  temp [pos="0.6,0.4"]
-  wind [pos="0.2,0.4"]
-  DC -> area
-  DMC -> area
-  FFMC -> area
-  FFMC -> ISI
-  ISI -> area
-  month -> rain
-  month -> temp
-  month -> DC
-  RH -> DMC
-  RH -> FFMC
-  rain -> DC
-  rain -> DMC
-  rain -> FFMC
-  temp -> DC
-  temp -> DMC
-  temp -> FFMC
-  temp -> RH
-  wind -> FFMC
-  wind -> ISI
-  DC -> DMC
-}')
-png(file="~/Documents/Artificial Intelligence/Master/2122 Sem. 1/Bayesian Networks/Assignment1/Assignment_1/imgs/pathcoef.png",
-    width=600, height=350)
-cg <- coordinates(g)
-fit <- sem( toString(g,"lavaan"), sample.cov=M, sample.nobs=nrow(d) )
-fg <- lavaanToGraph(fit, digits=2)
-coordinates(fg) <- cg
-plot(fg, show.coefficients=TRUE)
+# Printing predicted and real area
+png(file="prediction_train.png", width=600, height=350)
+plot(exp(dtrain$area), main = 'Overview of the predicted area (Red) and \nthe actual area in the training data (Blue) ',ylab = 'Area (Ha)', col = "blue")
+points(exp(ptrain),  col = "red")
 dev.off()
-summary(fit)
+
+png(file="train_predict_vs_actual.png", width=600, height=350)
+plot(dtrain$area, main = 'Overview of the predicted area (Red) and \nthe actual area in the training data (Blue) ',ylab = 'Log of the Area (Ha)', col = "blue")
+points(ptrain,  col = "red")
+dev.off()
+
+png(file="prediction_test.png", width=600, height=350)
+plot(exp(dtest$area), main = 'Overview of the predicted area (Red) and \nthe actual area in the test data (Blue) ',ylab = 'Area (Ha)', col = "blue")
+points(exp(ptest),  col = "red")
+dev.off()
+
+png(file="test_predict_vs_actual.png", width=600, height=350)
+plot(dtest$area, main = 'Overview of the predicted area (Red) and \nthe actual area in the test data (Blue) ',ylab = 'Log of the Area (Ha)', col = "blue")
+points(ptest,  col = "red")
+dev.off()
 
