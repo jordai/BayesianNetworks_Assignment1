@@ -28,4 +28,10 @@ This repo also contains the following important files:
  - `forestfires.csv` is the original dataset, as it is publicly available on the [UCI Machine Learning Repository](http://archive.ics.uci.edu/ml/datasets/Forest+Fires). This data is used in `data_exploration.R`.
  - `explored_forestfires.csv` contains the preprocessed data, after executing `data_exploration.R`. This file is used in `assignment1.R`.
 
+## Collaboration
+
+This project has been done in a team of three people:
+ - [Avuerro](https://github.com/Avuerro)
+ - [ElFilosofoX](https://github.com/ElFilosofoX)
+ - [JordAI](https://github.com/jordai)
 
